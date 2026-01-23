@@ -1,0 +1,11 @@
+langchain
+langchain-groq
+langchain-community
+langchain-huggingface
+langgraph
+pydantic
+python-dotenv
+chromadb
+sentence-transformers
+# For old Linux (CentOS 7), uncomment:
+# greenlet<2.0
