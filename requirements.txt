@@ -9,3 +9,6 @@ chromadb
 sentence-transformers
 # For old Linux (CentOS 7), uncomment:
 # greenlet<2.0
+
+# Testing
+pytest>=7.4.0
