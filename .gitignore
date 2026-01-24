@@ -3,5 +3,3 @@
 __pycache__/
 data/
 logs/
-tests/
-*.md
