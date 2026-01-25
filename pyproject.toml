@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ma-system"
+version = "0.1.0"
+description = "Multi-Agent System with Planner-Grounder-Actor Architecture"
+requires-python = ">=3.10"
+dependencies = [
+    "langchain",
+    "langchain-groq",
+    "langchain-community",
+    "langchain-huggingface",
+    "langgraph",
+    "pydantic>=2.0.0",
+    "python-dotenv",
+    "chromadb",
+    "sentence-transformers",
+    "pyyaml>=6.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pytest>=7.4.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "config*", "prompts*"]

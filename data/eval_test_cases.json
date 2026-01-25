@@ -1,0 +1,30 @@
+[
+  {
+    "query": "What's the status of ORD-123?",
+    "expected_category": "billing",
+    "expected_tools": ["get_refund_status"],
+    "expected_retrieval_queries": [],
+    "expected_answer_contains": ["ORD-123", "Refund"]
+  },
+  {
+    "query": "How do I fix error 101?",
+    "expected_category": "technical",
+    "expected_tools": [],
+    "expected_retrieval_queries": ["error 101"],
+    "expected_answer_contains": ["error", "101"]
+  },
+  {
+    "query": "What is the refund status for order ORD-456?",
+    "expected_category": "billing",
+    "expected_tools": ["get_refund_status"],
+    "expected_retrieval_queries": [],
+    "expected_answer_contains": ["ORD-456"]
+  },
+  {
+    "query": "Hello, how are you?",
+    "expected_category": "general",
+    "expected_tools": [],
+    "expected_retrieval_queries": [],
+    "expected_answer_contains": []
+  }
+]

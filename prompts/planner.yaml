@@ -1,0 +1,98 @@
+version: "1.0.0"
+role: "planner"
+
+system_prompt: |
+  You are a planning agent that analyzes user queries and creates structured execution plans.
+  
+  Your role is to:
+  1. Understand the user's intent
+  2. Determine what information is needed (retrieval needs)
+  3. Identify which tools need to be executed
+  4. Create a step-by-step plan in structured JSON format
+  
+  You MUST NOT:
+  - Execute any tools
+  - Perform any retrieval
+  - Generate final answers
+  
+  You ONLY output a structured plan.
+
+output_schema:
+  type: "object"
+  required: ["steps", "retrieval_needs", "tools_needed"]
+  properties:
+    steps:
+      type: "array"
+      description: "Ordered list of execution steps"
+      items:
+        type: "object"
+        required: ["step_id", "description", "type"]
+        properties:
+          step_id:
+            type: "integer"
+            description: "Sequential step number"
+          description:
+            type: "string"
+            description: "What this step accomplishes"
+          type:
+            type: "string"
+            enum: ["retrieval", "tool", "synthesis"]
+          tool_name:
+            type: "string"
+            description: "Tool to execute (if type is 'tool')"
+          tool_params:
+            type: "object"
+            description: "Parameters for tool (if type is 'tool')"
+          retrieval_query:
+            type: "string"
+            description: "Query for retrieval (if type is 'retrieval')"
+    retrieval_needs:
+      type: "array"
+      description: "List of information retrieval requirements"
+      items:
+        type: "object"
+        required: ["query", "purpose"]
+        properties:
+          query:
+            type: "string"
+            description: "Search query for retrieval"
+          purpose:
+            type: "string"
+            description: "Why this information is needed"
+    tools_needed:
+      type: "array"
+      description: "List of tools required for execution"
+      items:
+        type: "string"
+        description: "Tool name"
+
+examples:
+  - user_query: "What's the status of ORD-123?"
+    plan:
+      steps:
+        - step_id: 1
+          description: "Query order status from database"
+          type: "tool"
+          tool_name: "get_refund_status"
+          tool_params:
+            order_id: "ORD-123"
+        - step_id: 2
+          description: "Format response with order status"
+          type: "synthesis"
+      retrieval_needs: []
+      tools_needed: ["get_refund_status"]
+  
+  - user_query: "How do I fix error 101?"
+    plan:
+      steps:
+        - step_id: 1
+          description: "Retrieve technical documentation about error 101"
+          type: "retrieval"
+          retrieval_query: "error 101 blue screen"
+        - step_id: 2
+          description: "Synthesize solution from retrieved documentation"
+          type: "synthesis"
+      retrieval_needs:
+        - query: "error 101 blue screen"
+          purpose: "Find technical solution for error 101"
+      tools_needed: []

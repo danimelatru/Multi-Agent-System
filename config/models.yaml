@@ -1,0 +1,33 @@
+# Model configurations for different agent roles
+# Each role can use a different LLM provider/model
+
+planner:
+  provider: "groq"
+  model: "llama-3.3-70b-versatile"
+  temperature: 0.1
+  max_tokens: 2048
+  # API key from environment: GROQ_API_KEY
+
+grounder:
+  provider: "groq"
+  model: "llama-3.3-70b-versatile"
+  temperature: 0.0
+  max_tokens: 1024
+
+actor:
+  provider: "groq"
+  model: "llama-3.3-70b-versatile"
+  temperature: 0.0
+  max_tokens: 2048
+
+critic:
+  provider: "groq"
+  model: "llama-3.3-70b-versatile"
+  temperature: 0.2
+  max_tokens: 512
+
+# Embedding model for RAG
+embeddings:
+  provider: "huggingface"
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  device: "cpu"

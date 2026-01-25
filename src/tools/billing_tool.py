@@ -1,17 +1,22 @@
+"""
+Billing tool for querying order refund status.
+"""
 import sqlite3
 from pathlib import Path
 from contextlib import contextmanager
-from langchain_core.tools import tool
-from src.config import get_llm
+from typing import Dict, Any
+
+from src.observability.logger import get_logger
+
+logger = get_logger("tool.billing")
 
 # Database path
 DB_PATH = Path("data/billing.db")
 
+
 @contextmanager
 def get_db_connection():
-    """
-    Context manager for database connections with automatic commit/rollback.
-    """
+    """Context manager for database connections."""
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     try:
@@ -23,16 +28,12 @@ def get_db_connection():
     finally:
         conn.close()
 
+
 def init_billing_db():
-    """
-    Initialize the billing database schema and seed initial data.
-    Must be called explicitly from run_system.py, not at import time.
-    """
-    # Ensure data directory exists
+    """Initialize billing database schema and seed data."""
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     
     with get_db_connection() as conn:
-        # Create orders table
         conn.execute("""
             CREATE TABLE IF NOT EXISTS orders (
                 order_id TEXT PRIMARY KEY,
@@ -41,7 +42,6 @@ def init_billing_db():
             )
         """)
         
-        # Seed existing ORD examples (only if table is empty)
         cursor = conn.execute("SELECT COUNT(*) as count FROM orders")
         if cursor.fetchone()["count"] == 0:
             conn.execute("""
@@ -51,12 +51,19 @@ def init_billing_db():
                 ('ORD-999', 'Rejected: Item damaged by user')
             """)
 
-# Define the Tool
-@tool
-def get_refund_status(order_id: str):
+
+def get_refund_status(order_id: str) -> Dict[str, Any]:
     """
-    Queries the database for the refund status of a specific order ID.
+    Query database for refund status of an order.
+    
+    Args:
+        order_id: Order identifier (e.g., 'ORD-123')
+    
+    Returns:
+        Dictionary with status and result
     """
+    logger.info("Executing get_refund_status", order_id=order_id)
+    
     try:
         with get_db_connection() as conn:
             cursor = conn.execute(
@@ -64,17 +71,29 @@ def get_refund_status(order_id: str):
                 (order_id,)
             )
             row = cursor.fetchone()
+            
             if row:
-                return row["refund_status"]
-            return f"Order ID '{order_id}' not found in system."
+                result = {
+                    "success": True,
+                    "order_id": order_id,
+                    "refund_status": row["refund_status"]
+                }
+                logger.info("Tool execution successful", order_id=order_id)
+                return result
+            else:
+                result = {
+                    "success": False,
+                    "order_id": order_id,
+                    "error": f"Order ID '{order_id}' not found in system."
+                }
+                logger.warning("Order not found", order_id=order_id)
+                return result
+                
     except Exception as e:
-        return f"Database error: {str(e)}"
-
-def build_billing_agent():
-    """
-    Returns the LLM binded with the billing tools.
-    """
-    llm = get_llm()
-    tools = [get_refund_status]
-    # Bind tools so the LLM knows it can call them
-    return llm.bind_tools(tools)
+        error_msg = f"Database error: {str(e)}"
+        logger.error("Tool execution failed", order_id=order_id, error=error_msg)
+        return {
+            "success": False,
+            "order_id": order_id,
+            "error": error_msg
+        }

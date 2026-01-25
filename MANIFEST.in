@@ -1,0 +1,8 @@
+include README.md
+include requirements.txt
+include .env.example
+recursive-include config *.yaml
+recursive-include prompts *.yaml
+recursive-include data *.txt *.json
+global-exclude __pycache__
+global-exclude *.py[co]

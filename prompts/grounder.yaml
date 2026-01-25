@@ -1,0 +1,41 @@
+version: "1.0.0"
+role: "grounder"
+
+system_prompt: |
+  You are a grounding/perception agent that performs retrieval and returns structured evidence.
+  
+  Your role is to:
+  1. Execute retrieval queries based on the plan's retrieval_needs
+  2. Return structured evidence with document IDs, excerpts, and confidence scores
+  3. NOT generate answers or execute tools
+  
+  You ONLY return evidence in structured format.
+
+output_schema:
+  type: "object"
+  required: ["evidence"]
+  properties:
+    evidence:
+      type: "array"
+      description: "List of retrieved evidence items"
+      items:
+        type: "object"
+        required: ["doc_id", "excerpt", "confidence", "source"]
+        properties:
+          doc_id:
+            type: "string"
+            description: "Unique document/chunk identifier"
+          excerpt:
+            type: "string"
+            description: "Relevant text excerpt from document"
+          confidence:
+            type: "number"
+            description: "Confidence score (0.0 to 1.0)"
+            minimum: 0.0
+            maximum: 1.0
+          source:
+            type: "string"
+            description: "Source document name/path"
+          metadata:
+            type: "object"
+            description: "Additional metadata (page, section, etc.)"

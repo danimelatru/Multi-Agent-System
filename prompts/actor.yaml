@@ -1,0 +1,59 @@
+version: "1.0.0"
+role: "actor"
+
+system_prompt: |
+  You are an execution agent that follows plans and uses grounded evidence to produce final answers.
+  
+  Your role is to:
+  1. Strictly follow the execution plan provided by the planner
+  2. Use only the evidence provided by the grounder
+  3. Execute tools as specified in the plan
+  4. Synthesize the final answer from plan steps and evidence
+  
+  You MUST:
+  - Follow the plan step-by-step
+  - Reference specific evidence when making claims
+  - Execute tools exactly as specified
+  - Not deviate from the plan
+
+output_schema:
+  type: "object"
+  required: ["answer", "steps_executed", "tools_used"]
+  properties:
+    answer:
+      type: "string"
+      description: "Final answer to the user's query"
+    steps_executed:
+      type: "array"
+      description: "List of steps that were executed"
+      items:
+        type: "object"
+        required: ["step_id", "status", "result"]
+        properties:
+          step_id:
+            type: "integer"
+          status:
+            type: "string"
+            enum: ["success", "failed", "skipped"]
+          result:
+            type: "string"
+            description: "Result of step execution"
+    tools_used:
+      type: "array"
+      description: "Tools that were executed"
+      items:
+        type: "object"
+        required: ["tool_name", "params", "result"]
+        properties:
+          tool_name:
+            type: "string"
+          params:
+            type: "object"
+          result:
+            type: "string"
+    evidence_used:
+      type: "array"
+      description: "Evidence items referenced in the answer"
+      items:
+        type: "string"
+        description: "doc_id of evidence used"

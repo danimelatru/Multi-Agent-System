@@ -1,0 +1,38 @@
+# System policies and behavior configuration
+
+orchestration:
+  max_iterations: 3
+  enable_critic: true
+  fallback_on_error: true
+
+planner:
+  require_tool_specs: true
+  require_retrieval_needs: true
+  max_steps: 5
+
+grounder:
+  min_confidence: 0.3
+  max_evidence_chunks: 5
+  return_doc_ids: true
+
+actor:
+  strict_plan_following: true
+  allow_tool_retry: true
+  max_tool_retries: 2
+
+critic:
+  validate_plan_adherence: true
+  validate_evidence_usage: true
+  trigger_fallback_on_fail: true
+
+logging:
+  log_level: "INFO"
+  log_format: "json"
+  log_prompt_versions: true
+  log_model_versions: true
+  log_retrieval_versions: true
+
+tracing:
+  enabled: true
+  trace_id_header: "X-Trace-Id"
+  span_duration_threshold_ms: 100

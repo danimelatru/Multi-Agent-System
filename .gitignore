@@ -1,5 +1,58 @@
-.env
-.env.*
+# --- Virtual Environments ---
+.venv/
+venv/
+env/
+bin/
+lib/
+share/
+Include/
+
+# --- Python / Compilation ---
 __pycache__/
-data/
+*.py[cod]
+*$py.class
+*.so
+.python-version
+
+# --- Distribution & Installation ---
+# This removes the .egg-info folders seen in your project structure
+*.egg-info/
+.installed.cfg
+*.egg
+common-wheels/
+dist/
+build/
+
+# --- Local Config & Secrets ---
+# Protects your Groq/OpenAI API keys and local overrides
+.env
+.env.local
+.env.*
+config/local_settings.yaml
+
+# --- Databases & Storage ---
+# Prevents uploading heavy Chroma DB vector files to Git
+data/chroma_db/
+*.db
+*.sqlite3
+
+# --- Logs & Debugging ---
 logs/
+*.log
+.pdm-python
+.python-guess
+
+# --- Testing & Coverage ---
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+htmlcov/
+.results/
+
+# --- IDEs & Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store

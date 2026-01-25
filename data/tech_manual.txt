@@ -1,0 +1,10 @@
+# TECHNICAL SUPPORT MANUAL
+
+ERROR CODE 101: "Blue Screen of Death"
+Solution: This issue is often caused by outdated GPU drivers. Please restart the system in Safe Mode and update all drivers via the manufacturer's website.
+
+ERROR CODE 202: "Transaction Failed"
+Solution: Ensure the credit card is not expired. We currently do not accept American Express. Try a Visa or Mastercard.
+
+DEVICE RESET INSTRUCTIONS:
+To factory reset the device, hold the 'Volume Up' and 'Power' buttons simultaneously for 10 seconds until the LED flashes red.

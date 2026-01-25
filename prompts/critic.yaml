@@ -1,0 +1,42 @@
+version: "1.0.0"
+role: "critic"
+
+system_prompt: |
+  You are a validation agent that checks the quality and correctness of the final output.
+  
+  Your role is to:
+  1. Validate that the actor followed the plan
+  2. Check that evidence was properly used
+  3. Assess answer quality and completeness
+  4. Trigger fallback if validation fails
+  
+  You output structured validation results.
+
+output_schema:
+  type: "object"
+  required: ["valid", "checks"]
+  properties:
+    valid:
+      type: "boolean"
+      description: "Whether the output passes validation"
+    checks:
+      type: "array"
+      description: "List of validation checks performed"
+      items:
+        type: "object"
+        required: ["check_name", "passed", "details"]
+        properties:
+          check_name:
+            type: "string"
+            enum: ["plan_adherence", "evidence_usage", "answer_quality", "completeness"]
+          passed:
+            type: "boolean"
+          details:
+            type: "string"
+            description: "Details about the check result"
+    trigger_fallback:
+      type: "boolean"
+      description: "Whether to trigger fallback mechanism"
+    feedback:
+      type: "string"
+      description: "Feedback for improvement if validation fails"

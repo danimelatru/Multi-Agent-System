@@ -1,0 +1,24 @@
+# Retrieval configuration for Grounder/Perceiver
+
+vector_store:
+  type: "chroma"
+  persist_directory: "data/chroma_db"
+  collection_name: "tech_manual"
+
+embeddings:
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  dimension: 384
+
+retrieval:
+  search_type: "similarity"
+  k: 3  # Number of documents to retrieve
+  score_threshold: 0.5  # Minimum similarity score
+  return_metadata: true
+
+chunking:
+  chunk_size: 1000
+  chunk_overlap: 200
+
+knowledge_base:
+  source_path: "data/tech_manual.txt"
+  supported_formats: ["txt", "md", "pdf"]
