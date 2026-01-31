@@ -98,6 +98,8 @@ The orchestrator coordinates agents by explicitly passing an `ExecutionState` ob
 - **Structured, versioned outputs**
 - **Deterministic orchestration flow**
 - **Production-grade observability**
+- **Hybrid RAG**: Prioritizes retrieved evidence but falls back to general model knowledge for out-of-domain queries
+- **Automatic log rotation**: Keeps only the last 7 days of logs to prevent disk bloat
 
 ---
 

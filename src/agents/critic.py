@@ -46,7 +46,7 @@ class Critic(BaseAgent):
         format_instructions = self.json_parser.get_format_instructions()
         
         prompt = ChatPromptTemplate.from_messages([
-            ("system", f"{system_prompt}\n\n{format_instructions}"),
+            ("system", "{system_prompt}\n\n{format_instructions}"),
             ("human", """Validate the following execution:
 
 Plan:
@@ -62,7 +62,7 @@ Steps Executed:
 {steps_executed}"""),
         ])
         
-        self.chain = prompt | self.llm | self.json_parser
+        self.chain = prompt.partial(system_prompt=system_prompt, format_instructions=format_instructions) | self.llm | self.json_parser
     
     def validate(self, state: ExecutionState, request_id: str) -> Dict[str, Any]:
         """

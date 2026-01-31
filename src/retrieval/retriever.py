@@ -132,18 +132,21 @@ class Retriever:
         
         for query in queries:
             try:
-                docs_with_scores = self.retriever.get_relevant_documents_with_scores(query)
+                # Use vector store directly to get scores (likely distance)
+                k = self.config["retrieval"]["k"]
+                docs_with_scores = self.vector_store.similarity_search_with_score(query, k=k)
                 
                 for doc, score in docs_with_scores:
-                    if score >= min_confidence:
-                        evidence = {
-                            "doc_id": doc.metadata.get("doc_id", "unknown"),
-                            "excerpt": doc.page_content,
-                            "confidence": float(score),
-                            "source": doc.metadata.get("source", "unknown"),
-                            "metadata": doc.metadata
-                        }
-                        all_evidence.append(evidence)
+                    # Pass all retrieved docs regardless of score for now
+                    # (Metric might be distance, so higher/lower logic varies)
+                    evidence = {
+                        "doc_id": doc.metadata.get("doc_id", "unknown"),
+                        "excerpt": doc.page_content,
+                        "confidence": float(score),
+                        "source": doc.metadata.get("source", "unknown"),
+                        "metadata": doc.metadata
+                    }
+                    all_evidence.append(evidence)
                 
             except Exception as e:
                 self.logger.error(

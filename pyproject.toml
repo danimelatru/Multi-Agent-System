@@ -16,6 +16,7 @@ dependencies = [
     "pydantic>=2.0.0",
     "python-dotenv",
     "chromadb",
+    "langchain-chroma",
     "sentence-transformers",
     "pyyaml>=6.0",
     "fastapi>=0.104.0",

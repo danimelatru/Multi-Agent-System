@@ -51,11 +51,11 @@ class Grounder(BaseAgent):
         format_instructions = self.json_parser.get_format_instructions()
         
         prompt = ChatPromptTemplate.from_messages([
-            ("system", f"{system_prompt}\n\n{format_instructions}"),
+            ("system", "{system_prompt}\n\n{format_instructions}"),
             ("human", "Retrieve evidence for the following retrieval needs:\n{retrieval_needs}"),
         ])
         
-        self.chain = prompt | self.llm | self.json_parser
+        self.chain = prompt.partial(system_prompt=system_prompt, format_instructions=format_instructions) | self.llm | self.json_parser
     
     def retrieve(self, retrieval_needs: List[Dict[str, Any]], request_id: str) -> List[Dict[str, Any]]:
         """
